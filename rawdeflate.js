@@ -1653,20 +1653,16 @@ var zip_deflate = function(str, level) {
     zip_deflate_data = str;
     zip_deflate_pos = 0;
     if(typeof level == "undefined")
-	level = zip_DEFAULT_LEVEL;
+        level = zip_DEFAULT_LEVEL;
     zip_deflate_start(level);
 
-    var buff = new Array(1024);
-    var aout = [];
+    var buff = new Uint8Array(1024);
+    var uint8arrays = [];
     while((i = zip_deflate_internal(buff, 0, buff.length)) > 0) {
-	var cbuf = new Array(i);
-	for(j = 0; j < i; j++){
-	    cbuf[j] = String.fromCharCode(buff[j]);
-	}
-	aout[aout.length] = cbuf.join("");
+        uint8arrays.push(buff.subarray(0, i));
     }
     zip_deflate_data = null; // G.C.
-    return aout.join("");
+    return uint8arrays;
 }
 
 if (! ctx.RawDeflate) ctx.RawDeflate = {};
